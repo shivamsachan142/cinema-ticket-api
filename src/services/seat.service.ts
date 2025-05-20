@@ -6,12 +6,10 @@ export const purchaseSpecificSeat = async (req: Request, res: Response) => {
 
   try {
     const seat = await prisma.$transaction(async (tx) => {
-      const s = await tx.seat.findFirst({
-        where: {
-          cinemaId: id,
-          number: Number(seatNumber),
-        },
-      });
+      const [s] = await tx.$queryRawUnsafe<any[]>(
+        `SELECT * FROM "Seat" WHERE "cinemaId" = $1 AND "number" = $2 FOR UPDATE`,
+        id, Number(seatNumber)
+      );
 
       if (!s) throw new Error('Seat not found');
       if (s.isBooked) throw new Error('Seat already booked');
@@ -33,14 +31,14 @@ export const purchaseConsecutiveSeats = async (req: Request, res: Response) => {
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      const seats = await tx.seat.findMany({
-        where: { cinemaId: id },
-        orderBy: { number: 'asc' },
-      });
+      const seats = await tx.$queryRawUnsafe<any[]>(
+        `SELECT * FROM "Seat" WHERE "cinemaId" = $1 ORDER BY "number" FOR UPDATE`,
+        id
+      );
 
       for (let i = 0; i < seats.length - 1; i++) {
         if (!seats[i].isBooked && !seats[i + 1].isBooked) {
-          const updatedSeats = await Promise.all([
+          const [s1, s2] = await Promise.all([
             tx.seat.update({
               where: { id: seats[i].id },
               data: { isBooked: true },
@@ -50,7 +48,7 @@ export const purchaseConsecutiveSeats = async (req: Request, res: Response) => {
               data: { isBooked: true },
             }),
           ]);
-          return updatedSeats;
+          return [s1, s2];
         }
       }
 
@@ -62,3 +60,4 @@ export const purchaseConsecutiveSeats = async (req: Request, res: Response) => {
     res.status(400).json({ error: err.message });
   }
 };
+
