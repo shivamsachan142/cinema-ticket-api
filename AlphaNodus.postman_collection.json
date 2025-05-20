@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "7949724c-bdf1-4fe8-8c29-c91c4d37f1fb",
+		"name": "AlphaNodus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13326991"
+	},
+	"item": [
+		{
+			"name": "create_cinema",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"seatCount\": 10\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/cinemas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book_seat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/cinemas/0f625904-b310-47b6-8b0b-821a8fd53a02/seats/5/purchase",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas",
+						"0f625904-b310-47b6-8b0b-821a8fd53a02",
+						"seats",
+						"5",
+						"purchase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auto_book_2_seats",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/cinemas/0f625904-b310-47b6-8b0b-821a8fd53a02/seats/auto-purchase",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas",
+						"0f625904-b310-47b6-8b0b-821a8fd53a02",
+						"seats",
+						"auto-purchase"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
